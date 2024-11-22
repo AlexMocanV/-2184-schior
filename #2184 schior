@@ -1,0 +1,69 @@
+#include <bits/stdc++.h>
+std::ifstream fin("schior.in");
+std::ofstream fout("schior.out");
+std::vector<std::vector<int>>mat;
+std::vector<std::vector<bool>>A;
+int n,m;
+const int di[8]={-1,1,0,0,1,-1,1,-1},
+          dj[8]={0,0,1,-1,1,-1,-1,1};  
+          
+void reset()
+{
+    for(int i=1;i<=n;i++)
+    {
+        for(int j(1);j<=n;j++)
+        {
+            A[i][j]=0;
+        }
+    }
+}
+void fill(int i,int j)
+{
+    std::queue<std::pair<int,int>>q;
+    q.push({i,j});
+    A[i][j]=1;
+    while(!q.empty())
+    {
+        int i=q.front().first,j=q.front().second;
+        for(int k=0;k<8;k++)
+        {
+            int ni=i+di[k],nj=j+dj[k];
+            if(ni>=1&&ni<=n&&nj<=m&&nj>=1&&mat[ni][nj]<=mat[i][j]&&A[ni][nj]==0)
+            {
+                q.push({ni,nj});
+                A[ni][nj]=1;
+            }
+        }
+        q.pop();
+    }
+}
+
+int main()
+{
+    int ist,jst;
+    fin>>n>>m;
+    mat.resize(n+1,std::vector<int>(m+1));
+    A.resize(n+1,std::vector<bool>(m+1));
+    fin>>ist>>jst;
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=m;j++)
+        {
+            fin>>mat[i][j];
+        }
+    }
+    int mini=1000001;
+    fill(ist,jst);
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=m;j++)
+        {
+            if(A[i][j]==1)
+            {
+                mini=std::min(mat[i][j],mini);
+            }
+        }
+    }
+    fout<<mini;
+    return 0;
+}
